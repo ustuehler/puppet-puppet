@@ -1,4 +1,3 @@
-import 'classes/*.pp'
 import 'defines/*.pp'
 
 # Currently only sets some class variables to describe the running

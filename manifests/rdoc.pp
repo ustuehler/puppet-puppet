@@ -20,15 +20,15 @@
 # * http://projects.puppetlabs.com/issues/4798
 class puppet::rdoc
 {
-  include puppet
+	include puppet
 
-  if ! $puppet_rdoc_outputdir {
-    fail("No output directory for RDoc documentation specified")
-  }
+	if ! $puppet_rdoc_outputdir {
+		fail("No output directory for RDoc documentation specified")
+	}
 
-  exec { 'puppet::rdoc/puppetdoc':
-    command => "$puppet::puppetdoc --all --mode rdoc --outputdir '$puppet_rdoc_outputdir' --modulepath '$puppet::modulepath' --manifest='$puppet::manifest'",
-    creates => $puppet_rdoc_outputdir,
-    logoutput => on_failure
-  }
+	exec { 'puppet::rdoc/puppetdoc':
+		command => "$puppet::puppetdoc --all --mode rdoc --outputdir '$puppet_rdoc_outputdir' --modulepath '$puppet::modulepath' --manifest='$puppet::manifest'",
+		creates => $puppet_rdoc_outputdir,
+		logoutput => on_failure
+	}
 }
