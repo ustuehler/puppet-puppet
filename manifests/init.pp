@@ -1,5 +1,3 @@
-import 'defines/*.pp'
-
 # Currently only sets some class variables to describe the running
 # Puppet instance, like $puppet::vardir (which currently comes from
 # a custom fact).
