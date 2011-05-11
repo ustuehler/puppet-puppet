@@ -13,7 +13,7 @@ Facter.add("puppet_bindir") do
   setcode do
     bindir = ''
     (ENV['PATH'].split(':') + default_paths).each do |dir|
-      filename = File.join(dir, 'puppetdoc')
+      filename = File.join(dir, 'puppet')
       if File.exists?(filename)
         bindir = dir
         break
