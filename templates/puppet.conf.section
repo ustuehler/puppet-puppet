@@ -1,0 +1,7 @@
+
+[<%= name %>]
+<% params.each do |key, value| -%>
+<%   if value != :undef -%>
+<%= key %>=<%= value %>
+<%   end -%>
+<% end -%>
