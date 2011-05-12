@@ -1,7 +1,7 @@
 # Define a Puppet configuration fragment for an environment.
-define puppet::config::environment($confdir,
-    $modulepath = "$confdir/modules",
-    $manifestdir = "$confdir/manifests",
+define puppet::config::environment($basedir,
+    $modulepath = "$basedir/modules",
+    $manifestdir = "$basedir/manifests",
     $manifest = "$manifestdir/site.pp")
 {
 	puppet::config::section { $name:
