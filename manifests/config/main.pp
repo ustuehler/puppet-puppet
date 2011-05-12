@@ -9,10 +9,8 @@ class puppet::config::main()
 		    vardir => $puppet::vardir,
 		    ssldir => $puppet::ssldir,
 		    rundir => $puppet::rundir,
-		    factpath => $puppet::factpath,
-		    templatedir => $puppet::templatedir,
-		    pluginsync => true,
-		    report => true
+		    factpath => '$vardir/lib/facter', # XXX
+		    templatedir => '$confdir/templates', # XXX
 		},
 		order => 10
 	}

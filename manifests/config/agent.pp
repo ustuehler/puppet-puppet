@@ -3,7 +3,9 @@ class puppet::config::agent($environment = $environment)
 {
 	puppet::config::section { agent:
 		params => {
-		    environment => $environment
+		    environment => $environment,
+		    pluginsync => true,
+		    report => true
 		},
 		order => 11
 	}
