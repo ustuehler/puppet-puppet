@@ -5,7 +5,14 @@ class puppet::master::bootstrap::debian()
 	# Verify that this Debian release is supported.
 	case $operatingsystemrelease {
 	    /^6\./: {
-		# Squeeze 6.0.2 has been tested.
+		# Squeeze 6.0.2 has been tested, but needs backports to
+		# get Puppet 2.7.x.
+		debian::apt::source { backports:
+			uri => "http://backports.debian.org/debian-backports",
+			distribution => "squeeze-backports",
+			components => 'main',
+			before => Package[puppetmaster-passenger]
+		}
 	    }
 
 	    default: {
@@ -13,18 +20,9 @@ class puppet::master::bootstrap::debian()
 	    }
 	}
 
-	# Install the Puppet master package and ensure that the
-	# standalone WEBrick service is not running.
-	#
-	# The "puppet" package is expected to be already installed
-	# and includes all the Ruby code for the master, but the
-	# "puppetmaster" package provides the rack configuration
-	# which is required for a Passenger setup.
-	package { puppetmaster:
+	# Install the Puppet master package for a Passenger setup.
+	package { puppetmaster-passenger:
 		ensure => present
-	}->service { puppetmaster:
-		ensure => stopped,
-		hasstatus => true
 	}
 
 	# Configure the SSL client verification directives in the
@@ -34,13 +32,13 @@ class puppet::master::bootstrap::debian()
 	    ssl_client_header:
 		section => master,
 		value => SSL_CLIENT_S_DN,
-		require => Package[puppetmaster],
+		require => Package[puppetmaster-passenger],
 		before => Service[apache2];
 
 	    ssl_client_verify_header:
 		section => master,
 		value => SSL_CLIENT_VERIFY,
-		require => Package[puppetmaster],
+		require => Package[puppetmaster-passenger],
 		before => Service[apache2];
 	}
 
