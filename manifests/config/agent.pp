@@ -5,7 +5,8 @@ class puppet::config::agent($environment = $environment)
 		params => {
 		    environment => $environment,
 		    pluginsync => true,
-		    report => true
+		    report => true,
+		    server => $servername
 		},
 		order => 11
 	}
