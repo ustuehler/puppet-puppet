@@ -87,6 +87,11 @@ class puppet::dashboard($path = "/", $port = 3000, $basedir = undef,
 		user => puppet-dashboard,
 		group => puppet-dashboard,
 		require => Class['mysql::server', 'ruby::mysql', 'ruby::rake']
+	}->cron { puppet-dashboard-maintenance:
+		user => puppet-dashboard,
+		command => "cd $params::basedir && $params::rake reports:prune upto=1 unit=day db:raw:optimize",
+		hour => 9,
+		minute => 0
 	}->file { "/etc/init.d/puppet-dashboard":
 		ensure => present,
 		content => template("bsdx/puppet/dashboard/initscript"),
