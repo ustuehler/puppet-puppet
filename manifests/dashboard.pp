@@ -30,7 +30,7 @@
 class puppet::dashboard($path = "/", $port = 3000, $vardir = undef,
     $download_mirror = extlookup("puppet::dashboard::download_mirror",
     "http://puppetlabs.com/downloads/dashboard"), $version =
-    extlookup("${name}::version", "1.2rc6"), $rails_env = "production")
+    extlookup("${name}::version", "1.1.1"), $rails_env = "production")
 {
 	# Store the final values of some parameters.
 	class { params:
