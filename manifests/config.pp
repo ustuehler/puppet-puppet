@@ -8,7 +8,8 @@ class puppet::config
 	concat { $path:
 		owner => root,
 		group => 0,
-		mode => 444
+		mode => 444,
+		require => Class[puppet]
 	}
 
 	concat::fragment { $name:

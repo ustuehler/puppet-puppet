@@ -1,5 +1,11 @@
 # Manage the [master] section in the Puppet configuration file.
-class puppet::config::master()
+#
+# == Parmaeters
+#
+# - servicename: Name of the Puppet master service (e.g. 'puppetmaster'
+#   or 'apache2' when running under Passenger).
+#
+class puppet::master::config($servicename)
 {
 	puppet::config::section { master:
 		params => {
@@ -11,6 +17,7 @@ class puppet::config::master()
 		    storeconfigs => true,
 		    dbadapter => sqlite3
 		},
-		order => 12
+		order => 12,
+		notify => Service[$servicename]
 	}
 }

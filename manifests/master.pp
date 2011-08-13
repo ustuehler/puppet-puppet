@@ -2,7 +2,16 @@
 # manage the Puppet agent service.  However useful that may be, you
 # can have a Puppet master that does not run a Puppet agent (or that
 # doesn't manage the agent aspects of the Puppet configuration.)
-class puppet::master
+#
+# == Parameters
+#
+# - servicename: Passed on to the config class, which see.
+#
+class puppet::master($servicename)
 {
-	include puppet::config::master
+	class { config:
+		servicename => $servicename
+	}
+
+	require config, install
 }

@@ -7,8 +7,13 @@
 #
 class puppet::master::passenger($rackdir, $ssldir)
 {
+	class { 'puppet::master':
+		servicename => apache2
+	}
+
+	require puppet::master
+
 	# Install Apache + Passenger with SSL support.
-	#require apache2
 	require apache2::mod_passenger
 	require apache2::mod_ssl
 
@@ -19,12 +24,12 @@ class puppet::master::passenger($rackdir, $ssldir)
 	    ssl_client_header:
 		section => master,
 		value => SSL_CLIENT_S_DN,
-		before => Service[apache2];
+		notify => Service[apache2];
 
 	    ssl_client_verify_header:
 		section => master,
 		value => SSL_CLIENT_VERIFY,
-		before => Service[apache2];
+		notify => Service[apache2];
 	}
 
 	# Create the <VirtualHost> configuration for Passenger.
