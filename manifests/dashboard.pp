@@ -27,23 +27,21 @@
 #   external_nodes = /var/lib/puppet-dashboard/bin/external_node
 #   node_terminus = exec
 #
-class puppet::dashboard($path = "/", $port = 3000, $basedir = undef,
+class puppet::dashboard($path = "/", $port = 3000, $vardir = undef,
     $download_mirror = extlookup("puppet::dashboard::download_mirror",
     "http://puppetlabs.com/downloads/dashboard"), $version =
-    extlookup("${name}::version", "1.0.4"), $srcdist = extlookup(
-    "${name}::srcdist", "puppetlabs-puppet-dashboard-071acf4"),
-    $rails_env = "production")
+    extlookup("${name}::version", "1.2rc6"), $rails_env = "production")
 {
 	# Store the final values of some parameters.
 	class { params:
 		path => $path,
 		port => $port,
-		basedir => $basedir ? {
+		vardir => $vardir ? {
 		    undef => $operatingsystem ? {
-			Debian => "/var/lib/puppet-dashboard",
-			default => "/var/puppet-dashboard"
+			Debian => "/var/lib",
+			default => "/var"
 		    },
-		    default => $basedir
+		    default => $vardir
 		},
 		rails_env => $rails_env
 	}
@@ -54,7 +52,6 @@ class puppet::dashboard($path = "/", $port = 3000, $basedir = undef,
 	include mysql::server
 	include ruby::mysql
 
-
 	group { puppet-dashboard:
 		ensure => present
 	}->user { puppet-dashboard:
@@ -62,20 +59,20 @@ class puppet::dashboard($path = "/", $port = 3000, $basedir = undef,
 		gid => puppet-dashboard,
 		home => $params::basedir,
 		managehome => false
-	}->wget::file { "${params::basedir}-${version}.tgz":
+	}->wget::file { "$params::vardir/puppet-dashboard-$version.tgz":
 		source => $download_url
-	}->file { "/var/lib/${srcdist}":
+	}->file { "$params::vardir/puppet-dashboard-$version":
 		ensure => directory,
 		owner => puppet-dashboard,
 		group => puppet-dashboard,
 		mode => 755
-	}->exec { "/usr/bin/env tar -xzf /var/lib/${distname}.tgz -C /var/lib":
-		creates => "/var/lib/${srcdist}/config/database.yml.example",
+	}->exec { "/usr/bin/env tar -xzf $params::vardir/$distname.tgz -C $params::vardir":
+		creates => "$params::vardir/puppet-dashboard-$version/config/database.yml.example",
 		user => puppet-dashboard,
 		group => puppet-dashboard
 	}->file { $params::basedir:
-		ensure => $srcdist
-	}->file { "/var/lib/puppet-dashboard/config/database.yml":
+		ensure => "puppet-dashboard-$version"
+	}->file { "$params::basedir/config/database.yml":
 		ensure => present,
 		content => template("bsdx/puppet/dashboard/config/database.yml"),
 		owner => puppet-dashboard,
@@ -83,7 +80,7 @@ class puppet::dashboard($path = "/", $port = 3000, $basedir = undef,
 		mode => 444
 	}->exec { "$params::rake db:create db:migrate":
 		cwd => $params::basedir,
-		creates => "/var/lib/mysql/dashboard",
+		creates => "/var/lib/mysql/dashboard", # FIXME
 		user => puppet-dashboard,
 		group => puppet-dashboard,
 		require => Class['mysql::server', 'ruby::mysql', 'ruby::rake']
