@@ -1,5 +1,5 @@
 # Manage the [agent] section in the Puppet configuration file.
-class puppet::config::agent($environment = $environment)
+class puppet::agent::config($environment = $environment)
 {
 	puppet::config::section { agent:
 		params => {
