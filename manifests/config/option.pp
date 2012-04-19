@@ -6,8 +6,8 @@ define puppet::config::option($section, $value)
 	include puppet::config
 
 	# XXX: repeating [$section] unnecessarily here
-	concat::fragment { "puppet::config::option($name)":
-		target => $puppet::config::path,
+	file_fragment { "puppet::config::option($name)":
+		path => $puppet::config::path,
 		content => "\n[${section}]\n${name}=${value}\n"
 	}
 }

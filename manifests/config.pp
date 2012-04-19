@@ -5,15 +5,15 @@ class puppet::config
 
 	$path = "$puppet::confdir/puppet.conf"
 
-	concat { $path:
+	file_concat { $path:
 		owner => root,
 		group => 0,
 		mode => 444,
 		require => Class[puppet]
 	}
 
-	concat::fragment { $name:
-		target => $path,
+	file_fragment { $name:
+		path => $path,
 		content => "# MANAGED BY PUPPET\n",
 		order => 00
 	}

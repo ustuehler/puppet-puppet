@@ -10,8 +10,8 @@ define puppet::config::section($params, $order = 20)
 {
 	include puppet::config
 
-	concat::fragment { "puppet::config::section($name)":
-		target => $puppet::config::path,
+	file_fragment { "puppet::config::section($name)":
+		path => $puppet::config::path,
 		content => template("puppet/puppet.conf.section"),
 		order => $order
 	}
