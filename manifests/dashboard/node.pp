@@ -1,4 +1,4 @@
-define puppet::dashboard::node($ensure = present, classes='', groups='')
+define puppet::dashboard::node($ensure = present, $classes='', $groups='')
 {
 	require puppet::dashboard
 	require puppet::dashboard::params
